@@ -1,0 +1,25 @@
+# Dependencies and generated applications
+node_modules/
+dist/
+build/
+.build/
+*.app/
+*.zip
+*.tar.gz
+*.dmg
+*.exe
+*.AppImage
+
+# Local settings, credentials, and logs
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+*.pem
+*.key
+.sleepdock/
+.idea/
+.vscode/
+__pycache__/
+*.pyc

@@ -1,0 +1,46 @@
+name: Build downloadable packages
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash macos/scripts/check.sh
+      - run: bash macos/scripts/build-app.sh
+      - run: ditto -c -k --sequesterRsrc --keepParent macos/build/SleepDock.app SleepDock-macOS-arm64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SleepDock-macOS-arm64
+          path: SleepDock-macOS-arm64.zip
+  electron:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win32
+            archive: SleepDock-Windows-x64.zip
+          - os: ubuntu-latest
+            platform: linux
+            archive: SleepDock-Linux-x64.tar.gz
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci
+        working-directory: cross-platform
+      - run: npm run package -- --platform=${{ matrix.platform }}
+        working-directory: cross-platform
+      - if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path cross-platform/dist/SleepDock-win32-x64 -DestinationPath SleepDock-Windows-x64.zip
+      - if: runner.os == 'Linux'
+        run: tar -czf SleepDock-Linux-x64.tar.gz -C cross-platform/dist SleepDock-linux-x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SleepDock-${{ matrix.platform }}-x64
+          path: ${{ matrix.archive }}

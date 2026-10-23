@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'">
+<title>SleepDock</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="shell">
+  <header class="header"><div class="logo">☾</div><div class="wordmark"><strong>SleepDock</strong><span>让休眠，听你的</span></div>
+    <label class="switch master no-drag" title="启用插件"><input id="masterEnabled" type="checkbox"><i></i></label>
+    <button class="icon no-drag" data-action="hide" title="隐藏到托盘" aria-label="隐藏到托盘">−</button><button class="icon no-drag" data-action="quit" title="退出并释放保护" aria-label="退出插件">×</button>
+  </header>
+  <main id="scroll">
+    <section class="status"><div class="status-top"><span id="badge">● 已停用</span><span id="battery">供电检测中</span></div>
+      <div class="status-main"><span id="moon">☾</span><div><h1 id="reason">插件已停用</h1><p id="detail">打开开关，开始管理休眠。</p></div></div>
+      <div class="metrics"><div><span>键鼠空闲</span><b id="idle">—</b></div><div><span>Agent 任务</span><b id="taskCount">0 个</b></div><div><span>供电</span><b id="power">—</b></div></div>
+    </section>
+    <div id="countdown" class="countdown" hidden><div><b id="countdownText"></b><p>可随时取消</p></div><button data-action="cancel">取消</button></div>
+    <div id="error" class="error" hidden><span id="errorText"></span><button data-action="dismissError" aria-label="关闭提示">×</button></div>
+    <section class="card full"><h2><span>☾ 休眠节奏</span><small>SLEEP</small></h2>
+      <div class="modes"><button data-mode="system">跟随系统</button><button data-mode="idle">空闲后休眠</button><button data-mode="timer">倒计时休眠</button><button data-mode="never">永不休眠</button></div>
+      <div id="duration" class="row" hidden><label for="minutes">时长</label><div><input id="minutes" type="number" min="1" max="1440" value="30"> 分钟</div></div>
+      <div id="timerControls" class="row" hidden><button class="primary" data-action="startTimer">开始倒计时</button><span id="timerText"></span><button data-action="cancel">取消</button></div>
+    </section>
+    <section class="card full"><h2><span>▱ 合盖行为</span><small>LID</small></h2><div class="segments"><button data-lid="system">系统默认</button><button data-lid="sleep">合盖休眠</button><button data-lid="keep">保持运行</button></div><p class="hint" id="lidHint">读取系统能力…</p></section>
+    <section class="card full"><h2><span>✦ Agent 守护</span><small>AGENTS</small></h2>
+      <label class="row"><span>任务运行时不休眠</span><span class="switch"><input id="agentProtection" type="checkbox"><i></i></span></label>
+      <label class="row"><span>完成后自动休眠<small class="sublabel">正常完成后 60 秒，无人操作才执行</small></span><span class="switch"><input id="sleepAfterAgents" type="checkbox"><i></i></span></label>
+      <details id="agentDetails" open><summary>监控的 Agent App <span id="selectedCount">6 个已选</span></summary><div id="agents"></div><button class="wide" data-action="addApp">＋ 添加其他 App</button></details>
+      <p class="hint">Codex／通用命令可识别正常完成；其他 App 按运行状态保护，关闭 App 不算任务完成。</p>
+      <button class="link" data-action="integration">复制通用命令接入示例 ↗</button>
+    </section>
+    <section class="card full"><details><summary>实用设置 <small>OPTIONS</small></summary><div class="options">
+      <label class="row"><span>屏幕常亮</span><span class="switch"><input id="keepDisplayAwake" type="checkbox"><i></i></span></label>
+      <label class="row"><span>仅接电时保护</span><span class="switch"><input id="acOnly" type="checkbox"><i></i></span></label>
+      <label class="row"><span>低电量释放保护</span><span><input id="lowBatteryCutoff" type="number" min="0" max="50"> %</span></label>
+      <label class="row"><span>窗口置顶</span><span class="switch"><input id="floatOnTop" type="checkbox"><i></i></span></label>
+      <label class="row"><span>紧凑模式</span><span class="switch"><input id="compact" type="checkbox"><i></i></span></label>
+      <label class="row"><span>磨砂深度</span><input id="opacity" type="range" min="0.45" max="1" step="0.01"></label>
+    </div></details></section>
+    <section class="actions full"><button data-action="sleep" id="sleepButton">☾ 立即休眠</button><button data-action="displayOff" id="displayButton">▱ 熄屏</button><button data-action="lock" id="lockButton">♙ 锁屏</button></section>
+    <section class="card full"><details><summary>最近记录 <small>ACTIVITY</small></summary><ul id="events"></ul></details></section>
+  </main>
+  <footer><button class="link" data-action="help">使用说明 ↗</button><span id="platformLabel"></span><button class="link compact-toggle" data-toggle="compact" title="展开或收起">⇅</button></footer>
+  <div id="resize" title="拖动调整高度，宽度固定" role="separator" aria-label="拖动调整窗口高度" aria-orientation="horizontal" tabindex="0"><i></i></div>
+  <div id="toast" role="status" hidden></div>
+</div><script src="app.js"></script></body></html>
